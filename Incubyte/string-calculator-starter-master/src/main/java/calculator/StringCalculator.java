@@ -2,22 +2,44 @@ package calculator;
 
 class StringCalculator {
 
-  public int add(String input) 
+ public int add(String input) 
 	  {
 		  	int i=0;
 		  	int sum = 0;int a = 0;
 		  	int length = input.length();
 		  	String temp = "";
-		  	TreeSet<Character> del = new TreeSet();
-		  	del.add('\n');
-		  	del.add(',');
+		  	TreeSet<String> del = new TreeSet();
+		  	del.add("\n");
+		  	del.add(",");
 		  	ArrayList<Integer> negatives = new ArrayList();
 		  	
 		  	if(length>1 && input.charAt(0)=='/' && input.charAt(1)=='/')
 		  	{
+		  		boolean start = false;
+		  		String del_temp = "";
 		  		for(i=2;i<length && input.charAt(i)!='\n';i++)
 			  	{
-			  		del.add(input.charAt(i));
+		  			if(start)
+		  			{
+		  				if(input.charAt(i)==']')
+			  			{
+		  					if(del_temp.length()>0)
+		  						del.add(del_temp);
+		  					del_temp = "";
+			  				start=false;
+			  			}
+		  				else
+		  				{
+		  					del_temp = del_temp + input.charAt(i);
+		  				}
+		  			}
+		  			else
+		  			{
+		  				if(input.charAt(i)=='[')
+		  				{
+			  				start=true;
+			  			}
+		  			}
 			  	}
 		  	}
 		  	
@@ -25,10 +47,21 @@ class StringCalculator {
 		  	{
 		  		boolean cont = false;
 		  		char curr = input.charAt(i);
-		  		Iterator<Character> it = del.iterator();
+		  		Iterator<String> it = del.iterator();
 		  		while(it.hasNext())
 		  		{
-		  			if(curr==it.next())
+		  			String del_curr = it.next();
+		  			boolean del_found = true;
+					int j=0
+		  			for(;j<del_curr.length() && (i+j)<input.length();j++)
+		  			{
+		  				if(del_curr.charAt(j)!=input.charAt(i+j))
+		  				{
+		  					del_found=false;
+		  				}
+		  			}
+					
+		  			if(del_found)
 		  			{
 		  				a = 0;
 			  	  		try
@@ -45,16 +78,18 @@ class StringCalculator {
 			  	  		}
 			  	  		else if(a<=1000)
 			  	  		{
-				  	  		sum = sum + a;		
+				  	  		sum = sum + a;
 			  	  		}
 						temp = "";
 			  	  		cont = true;
-			  		}
-			  		if(!cont)
-			  		{
-			  			temp = temp + curr;
+						break;
+						i=i+j;
 			  		}
 		  		}
+	         	if(!cont)
+  			{
+  				temp = temp + curr;
+  			}
 		  	}
 		  	
 		  	a = 0;
@@ -73,8 +108,8 @@ class StringCalculator {
 		  	else if(a<=1000)
 		  	{
 		  		sum = sum + a;
+	  	  		temp = "";	
 		  	}
-			temp = "";	
 			int n_neg = negatives.size();
 			if(n_neg>0)
 			{
@@ -90,7 +125,7 @@ class StringCalculator {
 					@Override
 					public String toString()
 					{
-						return "negatives not allowed "+exc;
+						return "negatives not allowed"+exc;
 					}
 				}
 				try
