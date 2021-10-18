@@ -2,31 +2,50 @@ package calculator;
 
 class StringCalculator {
 
-    public int add(String input) 
+   public int add(String input) 
   {
+	  	int i=0;
 	  	int sum = 0;int a = 0;
 	  	int length = input.length();
 	  	String temp = "";
-	  	for(int i=0;i<length;i++)
+	  	TreeSet<Character> del = new TreeSet();
+	  	del.add('\n');
+	  	del.add(',');
+	  	
+	  	if(length>1 && input.charAt(0)=='/' && input.charAt(1)=='/')
 	  	{
+	  		for(i=2;i<length && input.charAt(i)!='\n';i++)
+		  	{
+		  		del.add(input.charAt(i));
+		  	}
+	  	}
+	  	
+	  	for(;i<length;i++)
+	  	{
+	  		boolean cont = false;
 	  		char curr = input.charAt(i);
-	  		if(curr==',' || curr=='\n')
+	  		Iterator<Character> it = del.iterator();
+	  		while(it.hasNext())
 	  		{
-	  			a = 0;
-	  	  		try
-	  	  		{
-	  	  			a = Integer.parseInt(temp);
-	  	  		}
-	  	  		catch(Exception e)
-	  	  		{
-	  	  			a = 0;
-	  	  		}
-	  	  		sum = sum + a;
-	  	  		temp = "";
-	  		}
-	  		else
-	  		{
-	  			temp = temp + curr;
+	  			if(curr==it.next())
+	  			{
+	  				a = 0;
+		  	  		try
+		  	  		{
+		  	  			a = Integer.parseInt(temp);
+		  	  		}
+		  	  		catch(Exception e)
+		  	  		{
+		  	  			a = 0;
+		  	  		}
+		  	  		sum = sum + a;
+		  	  		temp = "";
+		  	  		cont = true;
+		  		}
+		  		if(!cont)
+		  		{
+		  			temp = temp + curr;
+		  		}
 	  		}
 	  	}
 	  	
